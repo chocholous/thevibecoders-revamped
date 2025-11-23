@@ -1,0 +1,31 @@
+{
+  "name": "thevibecoders-revamped",
+  "version": "1.0.0",
+  "description": "A clean, minimal community website for The Vibe Coders - a global community of pioneers using AI to build apps, agents, and businesses.",
+  "main": "cypress.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preview": "npm run preview:capture && npm run preview:view",
+    "preview:capture": "cypress run --spec 'cypress/preview/**/*.cy.js'",
+    "preview:view": "node scripts/view-preview.js",
+    "cypress:open": "cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chocholous/thevibecoders-revamped.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/chocholous/thevibecoders-revamped/issues"
+  },
+  "homepage": "https://github.com/chocholous/thevibecoders-revamped#readme",
+  "devDependencies": {
+    "cypress": "^15.7.0"
+  }
+}
