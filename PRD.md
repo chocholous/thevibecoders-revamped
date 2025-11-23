@@ -57,10 +57,10 @@ Build a clean, minimal community website that serves as an events hub and organi
 - Minimal JavaScript where possible
 
 ### Integration Points
-- Luma Calendar (event management)
-- Form submission service (organizer applications)
-- Image hosting solution (CDN for uploaded photos)
-- Simple authentication for organizers (passwordless preferred)
+- Luma Calendar (embedded widgets for events)
+- Airtable (all data: posts, applications, images)
+- Auth0 (Google + GitHub login for organizers)
+- Cloudinary or Airtable attachments (image hosting)
 
 ## In Scope
 
@@ -108,26 +108,27 @@ Build a clean, minimal community website that serves as an events hub and organi
 - Analytics dashboard for organizers
 - Social media auto-posting
 
-## Open Questions
+## Technical Decisions
 
-### Technical Decisions Needed
-1. **Framework**: Next.js (App Router) vs Astro vs Remix?
-   - Leaning: Next.js for familiarity and ecosystem
+### Decided ✅
+1. **Framework**: Astro
+   - Chosen for: Less code heavy, easy to maintain, minimal JS
 
-2. **Hosting**: Vercel vs Netlify vs AWS?
-   - Leaning: Vercel for Next.js optimization
+2. **Content & Forms**: Airtable
+   - All data in one place, visual interface, no backend code
 
-3. **Image Storage**: Cloudinary vs S3 vs Vercel Blob?
-   - Need: Resize on upload, CDN delivery
+3. **Auth Solution**: Auth0
+   - Google + GitHub login, simple for small user base
 
-4. **Form Handling**: Formspree vs Custom API vs Airtable?
-   - Need: Email notifications, simple storage
+4. **Events Integration**: Luma Calendar embeds
+   - No API complexity, always up-to-date
 
-5. **Auth Solution**: Clerk vs NextAuth vs Passwordless email?
-   - Need: Minimal friction for ~10-20 organizers
+### Pending Decisions
+1. **Hosting**: Vercel vs Netlify
+   - Both work great with Astro, need to test deployment
 
-6. **Content Storage**: MDX files vs Postgres vs Notion API?
-   - Need: Simple CRUD for posts, no complex queries
+2. **Image Optimization**: Cloudinary vs Airtable attachments
+   - Depends on performance requirements
 
 ## Definition of Done
 

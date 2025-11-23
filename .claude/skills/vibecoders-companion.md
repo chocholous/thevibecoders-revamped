@@ -89,12 +89,14 @@ When someone suggests these features, the answer is NO:
 - **Colors** - Deep purple primary, teal accents, orange CTAs
 - **Fonts** - Bold modern sans-serif (like original)
 
-### Technical Choices:
-- **Forms** - Simplest possible (Formspree > custom backend)
-- **Images** - CDN always (Cloudinary/Vercel)
-- **Auth** - Passwordless only (magic links)
-- **Database** - Start with JSON/MDX files
-- **Hosting** - Vercel (it just works)
+### Technical Choices (Decided):
+- **Framework** - Astro (less code, minimal JS)
+- **CMS/Database** - Airtable (everything in one place)
+- **Forms** - Airtable Forms API (no custom backend)
+- **Images** - Airtable attachments or Cloudinary
+- **Auth** - Auth0 (Google + GitHub only)
+- **Events** - Luma embeds (not API)
+- **Hosting** - Vercel or Netlify (both work great)
 
 ## The Feeling We Want
 
@@ -138,17 +140,41 @@ Organizers should feel:
 - Active state: purple underline
 - Mobile: full-screen overlay, not hamburger
 
+## Astro-Specific Guidance
+
+### Component Strategy
+- **Default to .astro files** - HTML-like, no JS overhead
+- **React islands only for**:
+  - Forms with complex validation
+  - Real-time features (if any)
+  - Rich interactions (image galleries, etc.)
+- **Never use React for**:
+  - Navigation
+  - Static cards
+  - Simple layouts
+
+### Airtable Integration
+- **Fetch at build time** - Use getStaticPaths()
+- **Simple schema**:
+  ```
+  Posts: City, Text, Images[], Date, AuthorEmail
+  Applications: Name, City, Links, Why, Status
+  Organizers: Email, City, Auth0ID
+  ```
+- **No complex queries** - Airtable isn't a database
+- **Rate limits** - Cache aggressively
+
 ## Red Flags to Avoid
 
 Stop immediately if you find yourself:
-- Creating user models/schemas
-- Building an admin panel
-- Adding configuration files
-- Making things "customizable"
-- Writing more than 5 API endpoints
+- Creating user models/schemas (Airtable handles this)
+- Building an admin panel (Airtable IS the admin)
+- Writing custom backend code
+- Making API endpoints (except for form submission)
 - Creating more than 10 components
-- Adding "just in case" fields
+- Adding "just in case" fields to Airtable
 - Building abstractions for single-use cases
+- Using React when Astro components would work
 
 ## Validation Questions
 

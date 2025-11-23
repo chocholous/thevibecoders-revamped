@@ -1,13 +1,15 @@
-# Component Patterns
+# Component Patterns for Astro
 
 > "We're pioneers" - Components that work today, ready to evolve tomorrow
 
 ## Design Principles
 
-1. **Minimal by default** - Start simple, add complexity only when needed
+1. **Minimal by default** - Start with .astro components, add React only when needed
 2. **Dark-first** - Designed for our purple universe
-3. **Accessible always** - Everyone can vibe
-4. **Responsive naturally** - Desktop-first, mobile-ready
+3. **Zero JS by default** - Ship JavaScript only for interactivity
+4. **Accessible always** - Everyone can vibe
+5. **Responsive naturally** - Desktop-first, mobile-ready
+6. **Airtable-powered** - Data comes from our visual CMS
 
 ## Core Components
 
@@ -472,6 +474,106 @@ Keep animations subtle and purposeful:
 }
 ```
 
+## Astro Component Implementation
+
+### Static Components (.astro files)
+Use for 90% of your components:
+```astro
+---
+// PostCard.astro
+export interface Props {
+  city: string;
+  text: string;
+  imageUrl: string;
+  authorName: string;
+  date: string;
+}
+
+const { city, text, imageUrl, authorName, date } = Astro.props;
+---
+
+<article class="post-card">
+  <img src={imageUrl} alt={`Post from ${city}`} />
+  <div class="post-content">
+    <span class="badge badge--city">{city}</span>
+    <p>{text}</p>
+    <footer>
+      <span class="post-author">{authorName}</span>
+      <time>{date}</time>
+    </footer>
+  </div>
+</article>
+```
+
+### Airtable Integration Pattern
+```javascript
+// lib/airtable.js
+import Airtable from 'airtable';
+
+const base = new Airtable({ apiKey: import.meta.env.AIRTABLE_API_KEY })
+  .base(import.meta.env.AIRTABLE_BASE_ID);
+
+export async function getPosts() {
+  const records = await base('Posts')
+    .select({
+      maxRecords: 20,
+      sort: [{field: "Date", direction: "desc"}]
+    })
+    .all();
+
+  return records.map(record => ({
+    id: record.id,
+    ...record.fields
+  }));
+}
+```
+
+### React Islands (Interactive Only)
+Use sparingly for truly interactive features:
+```jsx
+// UploadForm.jsx - Only this ships JavaScript!
+import { useState } from 'react';
+
+export function UploadForm({ authToken }) {
+  const [uploading, setUploading] = useState(false);
+
+  // Interactive logic here
+}
+```
+
+Usage in Astro:
+```astro
+---
+import UploadForm from '../components/UploadForm.jsx';
+---
+
+<!-- client:load = loads immediately -->
+<!-- client:visible = loads when visible -->
+<!-- client:idle = loads when browser is idle -->
+<UploadForm client:visible authToken={token} />
+```
+
+### Luma Calendar Embed
+```astro
+---
+// EventsSection.astro
+const lumaCalendarId = 'cal-xxx';
+---
+
+<section class="events-section">
+  <h2>Upcoming Events</h2>
+  <div class="luma-embed">
+    <iframe
+      src={`https://lu.ma/embed/calendar/${lumaCalendarId}/events`}
+      width="100%"
+      height="600"
+      frameborder="0"
+      style="border: 1px solid #bfcbda88; border-radius: 4px;"
+    />
+  </div>
+</section>
+```
+
 ## Component Don'ts
 
 - ❌ Don't over-animate (subtle > flashy)
@@ -479,6 +581,8 @@ Keep animations subtle and purposeful:
 - ❌ Don't use pure white on purple (use --color-text-primary)
 - ❌ Don't make components too complex (KISS)
 - ❌ Don't forget mobile touch targets (min 44px)
+- ❌ Don't use React when Astro components work
+- ❌ Don't fetch data client-side (use build-time fetching)
 
 ## Philosophy
 "We don't sell our souls" - Every component should feel authentic to our vibe. No corporate polish, no fake enthusiasm. Real connections, real design.

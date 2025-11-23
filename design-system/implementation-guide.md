@@ -2,13 +2,21 @@
 
 > "We're pioneers" - Let's build something that vibes
 
-## Quick Start with Next.js & Tailwind
+## Quick Start with Astro & Tailwind
 
 ### 1. Install Dependencies
 ```bash
-npm install -D tailwindcss @tailwindcss/forms @tailwindcss/typography
-npm install next react react-dom
-npm install lucide-react  # For icons
+# Create Astro project
+npm create astro@latest the-vibe-coders -- --template minimal --typescript --tailwind
+
+# Add React for interactive islands only
+npx astro add react
+
+# Add Airtable for CMS
+npm install airtable
+
+# Icons (optional)
+npm install lucide-react
 ```
 
 ### 2. Configure Tailwind with Our Tokens
@@ -117,149 +125,222 @@ module.exports = {
 
 ## Component Examples
 
-### Button Component
-**components/Button.jsx**
-```jsx
-export function Button({ variant = 'primary', children, ...props }) {
-  const variants = {
-    primary: 'btn-primary',
-    secondary: 'btn-secondary',
-    ghost: 'bg-transparent text-white font-medium opacity-80 hover:opacity-100 hover:underline'
-  }
-
-  return (
-    <button
-      className={`px-6 py-3 rounded-lg transition-all ${variants[variant]}`}
-      {...props}
-    >
-      {children}
-    </button>
-  )
+### Button Component (Astro)
+**components/Button.astro**
+```astro
+---
+export interface Props {
+  variant?: 'primary' | 'secondary' | 'ghost';
+  href?: string;
 }
+
+const { variant = 'primary', href } = Astro.props;
+
+const variants = {
+  primary: 'btn-primary',
+  secondary: 'btn-secondary',
+  ghost: 'bg-transparent text-white font-medium opacity-80 hover:opacity-100 hover:underline'
+};
+
+const className = `px-6 py-3 rounded-lg transition-all ${variants[variant]}`;
+---
+
+{href ? (
+  <a href={href} class={className}>
+    <slot />
+  </a>
+) : (
+  <button class={className}>
+    <slot />
+  </button>
+)}
 ```
 
-### Event Card Component
-**components/EventCard.jsx**
-```jsx
-export function EventCard({ date, title, description, location, emoji = '🚀' }) {
-  return (
-    <article className="card">
-      <span className="text-vibe-teal text-sm font-semibold uppercase tracking-wider">
-        {date}
-      </span>
-      <h3 className="text-xl my-3">
-        {title} {emoji}
-      </h3>
-      <p className="text-text-secondary mb-4">
-        {description}
-      </p>
-      <div className="text-text-secondary mb-5">
-        📍 {location}
-      </div>
-      <div className="flex gap-3">
-        <Button variant="primary">RSVP</Button>
-        <Button variant="ghost">Learn More</Button>
-      </div>
-    </article>
-  )
+### Event Card Component (Astro)
+**components/EventCard.astro**
+```astro
+---
+export interface Props {
+  date: string;
+  title: string;
+  description: string;
+  location: string;
+  lumaLink: string;
+  emoji?: string;
 }
+
+const { date, title, description, location, lumaLink, emoji = '🚀' } = Astro.props;
+---
+
+<article class="card">
+  <span class="text-vibe-teal text-sm font-semibold uppercase tracking-wider">
+    {date}
+  </span>
+  <h3 class="text-xl my-3">
+    {title} {emoji}
+  </h3>
+  <p class="text-text-secondary mb-4">
+    {description}
+  </p>
+  <div class="text-text-secondary mb-5">
+    📍 {location}
+  </div>
+  <div class="flex gap-3">
+    <a href={lumaLink} class="btn-primary" target="_blank" rel="noopener">
+      RSVP on Luma
+    </a>
+  </div>
+</article>
 ```
 
-### Layout Component
-**components/Layout.jsx**
-```jsx
-export function Layout({ children }) {
-  return (
-    <div className="min-h-screen flex flex-col">
+### Layout Component (Astro)
+**layouts/Layout.astro**
+```astro
+---
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} | The Vibe Coders</title>
+  </head>
+  <body class="bg-vibe-purple text-text-primary">
+    <div class="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1">
-        {children}
+      <main class="flex-1">
+        <slot />
       </main>
       <Footer />
     </div>
-  )
-}
+  </body>
+</html>
 ```
 
 ## Page Templates
 
-### Homepage
-**pages/index.jsx**
+### Homepage (Astro + Airtable)
+**pages/index.astro**
+```astro
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import EventCard from '../components/EventCard.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPosts } from '../lib/airtable';
+
+// Fetch posts from Airtable at build time
+const posts = await getPosts();
+---
+
+<Layout title="Home">
+  <!-- Hero Section -->
+  <section class="py-32 text-center">
+    <div class="container mx-auto px-4">
+      <h1 class="mb-6 bg-gradient-to-r from-white to-vibe-teal
+                 bg-clip-text text-transparent">
+        The universe is the limit
+      </h1>
+      <p class="text-lg text-text-secondary max-w-2xl mx-auto mb-8">
+        We command various AIs to craft apps, agents, webs, assets, toys—even businesses.
+      </p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <Button variant="primary" href="/become-organizer">
+          Start a Chapter
+        </Button>
+        <Button variant="secondary" href="/events">
+          Explore Events
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Activity Feed -->
+  <section class="py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-center mb-10">Community Activity</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map(post => (
+          <PostCard {...post} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Luma Events Embed -->
+  <section class="py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-center mb-10">Upcoming Events</h2>
+      <div class="luma-embed">
+        <!-- Luma calendar widget will go here -->
+        <iframe
+          src="https://lu.ma/embed/calendar/cal-xxx/events"
+          class="w-full h-96 rounded-lg"
+        />
+      </div>
+    </div>
+  </section>
+</Layout>
+```
+
+## React Islands (When Needed)
+
+For interactive components that require React, use Astro's island architecture:
+
+### Example: Upload Form (React Island)
+**components/UploadForm.jsx**
 ```jsx
-import { Layout } from '../components/Layout'
-import { Button } from '../components/Button'
-import { EventCard } from '../components/EventCard'
+import { useState } from 'react';
 
-export default function Home() {
+export function UploadForm() {
+  const [uploading, setUploading] = useState(false);
+
+  // This runs only on the client
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUploading(true);
+    // Upload to Airtable
+  };
+
   return (
-    <Layout>
-      {/* Hero Section */}
-      <section className="py-32 text-center">
-        <div className="container mx-auto px-4">
-          <h1 className="mb-6 bg-gradient-to-r from-white to-vibe-teal
-                         bg-clip-text text-transparent">
-            The universe is the limit
-          </h1>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto mb-8">
-            Different roles, experiences, backgrounds—and we vibe.
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button variant="primary">Join the Vibe</Button>
-            <Button variant="secondary">Explore Events</Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Events Grid */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-center mb-10">Upcoming Vibes</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map(event => (
-              <EventCard key={event.id} {...event} />
-            ))}
-          </div>
-        </div>
-      </section>
-    </Layout>
-  )
+    <form onSubmit={handleSubmit}>
+      {/* Interactive form logic */}
+    </form>
+  );
 }
 ```
 
-## Using with shadcn/ui
+**Usage in Astro page:**
+```astro
+---
+import UploadForm from '../components/UploadForm.jsx';
+---
 
-### Install shadcn/ui
-```bash
-npx shadcn-ui@latest init
+<!-- Only this component ships JavaScript -->
+<UploadForm client:load />
 ```
 
-### Customize shadcn Components
-Update `components.json` to use our colors:
-```json
-{
-  "style": "default",
-  "tailwind": {
-    "baseColor": "vibe-purple",
-    "cssVariables": true
-  }
-}
-```
+### When to Use React Islands:
+- Complex forms with validation
+- Real-time features
+- Image galleries with interactions
+- Auth0 login flows
 
-### Override shadcn Styles
-```css
-/* Override shadcn button */
-.ui-button {
-  @apply font-semibold tracking-wide transition-all duration-250;
-}
-
-.ui-button-primary {
-  @apply bg-vibe-orange hover:bg-vibe-orange-dark hover:shadow-glow-orange;
-}
-
-.ui-button-secondary {
-  @apply border-vibe-teal text-vibe-teal hover:bg-vibe-teal hover:text-vibe-purple;
-}
-```
+### When NOT to Use React:
+- Static content
+- Simple navigation
+- Basic cards and layouts
+- Anything that doesn't need interactivity
 
 ## Best Practices
 

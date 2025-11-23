@@ -1,8 +1,8 @@
 # Tech Stack Selection
 
-**Status**: Proposed
+**Status**: Decided
 **Date**: 2024-11-23
-**Decision**: Pending
+**Decision**: Astro + Airtable Stack
 
 ## Context
 
@@ -14,118 +14,130 @@ We need to choose a tech stack for The Vibe Coders community website that balanc
 
 ## Decision Drivers
 
-1. **Developer velocity** - Ship fast, iterate quickly
-2. **Performance** - Fast load times, good SEO
-3. **Ecosystem** - Available components and integrations
-4. **Hosting simplicity** - One-click deploys
+1. **Easy to maintain** - Less code heavy, simple architecture
+2. **Developer velocity** - Ship fast, iterate quickly
+3. **Performance** - Fast load times, good SEO
+4. **Minimal complexity** - Fewer dependencies, less to learn
 5. **YAGNI compliance** - Not over-engineered
+6. **Hosting simplicity** - One-click deploys
 
 ## Considered Options
 
-### Option 1: Next.js + Vercel (Recommended)
+### Option 1: Astro + Airtable (Selected ✅)
+**Pros:**
+- **Perfect for content sites** - Built for this use case
+- **Minimal JavaScript by default** - Ships zero JS unless you add it
+- **Less code heavy** - Simple mental model, easy to maintain
+- **Great performance** - Static by default, fast load times
+- **Island architecture** - Add interactivity only where needed
+- **Airtable as backend** - No custom database code needed
+- **Visual CMS** - Non-developers can manage content
+
+**Cons:**
+- Smaller ecosystem than React
+- Less suited for highly interactive apps (not a problem for us)
+
+### Option 2: Next.js + Vercel
 **Pros:**
 - Excellent DX with hot reload
 - Built-in image optimization
-- API routes if needed
-- Vercel hosting "just works"
+- Huge ecosystem, lots of examples
 - Great shadcn/ui support
-- ISR for event data
 
 **Cons:**
-- Might be overkill for static content
-- React overhead for simple site
-- App Router learning curve
-
-### Option 2: Astro + Netlify
-**Pros:**
-- Perfect for content sites
-- Minimal JavaScript by default
-- Great performance out of box
-- Can add React components where needed
-
-**Cons:**
-- Less familiar ecosystem
-- Fewer UI component options
-- Less dynamic capability
+- **Too code heavy** - More complex than needed
+- React overhead for mostly static site
+- App Router adds complexity
+- Requires more maintenance
 
 ### Option 3: Vanilla HTML/CSS/JS
 **Pros:**
 - Ultimate simplicity
 - No build process
-- Fast by default
 
 **Cons:**
 - Slow development
 - No component reuse
-- Manual optimization
+- Manual everything
 
 ## Decision
 
-**Proposed: Next.js 14+ with App Router**
+**Selected: Astro with Airtable Backend**
 
 ### Rationale
-1. **Familiarity** - Well-known, good docs, AI assistants understand it
-2. **shadcn/ui** - Works perfectly, gives us beautiful components fast
-3. **Vercel** - Zero-config deployment, automatic optimizations
-4. **Future-proof** - Can add dynamic features without rewrite
-5. **Image handling** - Next/Image solves our optimization needs
+1. **Simplicity** - Less code heavy, easier to maintain long-term
+2. **Perfect fit** - Astro is built for content sites like ours
+3. **Minimal JS** - Ships zero JavaScript by default, add only where needed
+4. **Airtable** - Visual database, no backend code, non-devs can manage
+5. **Fast by default** - Static generation gives excellent performance
+6. **YAGNI aligned** - Prevents over-engineering by design
 
 ### Implementation Plan
 
 ```bash
 # Initial setup
-npx create-next-app@latest vibe-coders --typescript --tailwind --app
-cd vibe-coders
-npx shadcn-ui@latest init
+npm create astro@latest the-vibe-coders -- --template minimal --typescript --tailwind
+cd the-vibe-coders
+
+# Add React for islands where needed
+npx astro add react
+
+# Install Airtable SDK
+npm install airtable
 ```
 
 ### Stack Details
 
 **Frontend:**
-- Next.js 14+ (App Router)
-- TypeScript (for safety)
-- Tailwind CSS (utility-first)
-- shadcn/ui (component library)
+- Astro (Static site generator with islands)
+- TypeScript (optional, lighter usage)
+- Tailwind CSS (utility-first styling)
+- React components (only for interactive islands)
 
-**Data:**
-- Local JSON/MDX files initially
-- API routes for form handling
-- Consider Prisma + PostgreSQL if needed later
+**Backend/CMS:**
+- Airtable (all content, forms, and data)
+  - Posts table (organizer updates)
+  - Applications table (organizer applications)
+  - Organizers table (auth mapping)
 
 **Services:**
-- Vercel (hosting)
-- Cloudinary or Vercel Blob (images)
-- Formspree (form submissions)
-- Luma Calendar API (events)
+- Vercel or Netlify (hosting - both work great with Astro)
+- Auth0 (Google + GitHub login for organizers)
+- Luma Calendar (embedded widgets, no API needed)
+- Cloudinary or Airtable attachments (images)
 
-**Auth:**
-- Start with hardcoded passwords
-- Move to Clerk if scale demands
+**Key Architecture Decisions:**
+- Static build with ISR for Airtable data
+- Protected routes using Auth0 for organizer uploads
+- Embed Luma widgets directly (no API complexity)
+- Use Airtable forms API for submissions
 
 ## Consequences
 
 ### Positive
-- Fast development with familiar tools
-- Great performance with minimal effort
-- Easy deployment and scaling
-- Rich component ecosystem
+- **Dramatically less code** - Simpler components, less boilerplate
+- **Easier maintenance** - Less to understand, less to break
+- **Faster by default** - Ships minimal JavaScript
+- **Lower learning curve** - Astro is simpler than Next.js
+- **Airtable simplicity** - No custom backend code at all
+- **Cost effective** - Free tiers cover our needs
 
 ### Negative
-- Some complexity we might not need
-- React/Next.js bundle size
-- Potential over-engineering temptation (must resist!)
+- Smaller ecosystem than React/Next.js
+- Less documentation/examples available
+- Airtable has API rate limits (not an issue at our scale)
 
 ### Mitigations
-- Stick to YAGNI principle
-- Use ISR/SSG wherever possible
-- Keep client components minimal
-- Regular bundle size audits
+- Use React islands where we need rich interactivity
+- Airtable's limits are generous for our use case
+- Astro's docs are excellent and community is growing
 
 ## Notes
 
-This is a reversible decision. If Next.js proves too heavy, we can:
-1. Export as static site
-2. Move content to Astro
-3. Keep same component structure
+This decision aligns perfectly with our principles:
+- **KISS**: Astro + Airtable is simpler than custom backend
+- **YAGNI**: Can't over-engineer when the framework prevents it
+- **"Less code heavy"**: Significantly less code than Next.js
+- **"Easy to maintain"**: Fewer dependencies, clearer architecture
 
-The important thing is to START BUILDING.
+The stack actively prevents the temptation to over-build.

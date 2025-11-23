@@ -26,13 +26,14 @@ We're pioneers. We're diverse. We vibe.
 3. **Activity Feed** - Share stories and photos from events
 4. **Community Building** - Connect pioneers across cities
 
-## Tech Stack (Planned)
+## Tech Stack
 
-- **Framework**: Next.js 14+ (App Router)
-- **Styling**: Tailwind CSS + shadcn/ui
-- **Hosting**: Vercel
-- **Events**: Luma Calendar integration
-- **Forms**: Formspree (or similar)
+- **Framework**: Astro (static site with islands architecture)
+- **CMS/Database**: Airtable (content, forms, images)
+- **Styling**: Tailwind CSS
+- **Auth**: Auth0 (Google + GitHub for organizers)
+- **Events**: Luma Calendar (embedded widgets)
+- **Hosting**: Vercel or Netlify (TBD)
 
 ## Project Structure
 
@@ -47,10 +48,23 @@ We're pioneers. We're diverse. We vibe.
 └── src/              # Source code (coming soon)
 ```
 
+## Why These Technology Choices?
+
+We chose tools that are **easy to maintain** and **less code heavy**:
+
+- **Astro** → Ships minimal JavaScript, simple mental model
+- **Airtable** → No backend code, visual database, non-devs can manage
+- **Auth0** → Authentication without the complexity
+- **Luma embeds** → No API integration needed
+- **Tailwind** → Utility-first, no custom CSS files
+
+This stack actively prevents over-engineering and keeps the codebase simple.
+
 ## Development Principles
 
 - **KISS** - Keep it simple, no over-engineering
 - **YAGNI** - Don't build features "just in case"
+- **Less Code** - Choose solutions that require minimal code
 - **Speed** - "Last month is sooo history"
 - **Authenticity** - "We don't sell our souls"
 - **IRL Focus** - "Vibe coding happens IRL"
