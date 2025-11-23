@@ -69,7 +69,7 @@
 - **Framework**: Astro (less code heavy, easy to maintain)
 - **CMS/Database**: Airtable (all content and forms)
 - **Styling**: Tailwind CSS
-- **Auth**: Auth0 (Google + GitHub login)
+- **authentication**: Auth0 (Google + GitHub login)
 - **Events**: Luma Calendar (embed widgets)
 - **Project management**: PLAN.md + MADRs for major decisions
 

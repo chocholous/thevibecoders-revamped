@@ -1,0 +1,251 @@
+name: Documentation Contradiction Check
+
+on:
+  push:
+    paths:
+      - '**.md'
+      - 'docs/**'
+      - 'design-system/**'
+  pull_request:
+    paths:
+      - '**.md'
+      - 'docs/**'
+      - 'design-system/**'
+  workflow_dispatch:
+  schedule:
+    # Run weekly on Sundays at 2 AM UTC
+    - cron: '0 2 * * 0'
+
+jobs:
+  check-contradictions:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('scripts/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install nltk textstat
+        # Download NLTK data
+        python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
+
+    - name: Run basic contradiction detector
+      id: basic_check
+      run: |
+        python scripts/detect_contradictions.py
+        echo "basic_complete=true" >> $GITHUB_OUTPUT
+      continue-on-error: true
+
+    - name: Run advanced NLP analyzer
+      id: advanced_check
+      run: |
+        python scripts/detect_contradictions_advanced.py
+        echo "advanced_complete=true" >> $GITHUB_OUTPUT
+      continue-on-error: true
+
+    - name: Upload analysis results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: contradiction-analysis
+        path: |
+          contradiction_analysis.json
+          scripts/fix_terminology.py
+        retention-days: 30
+
+    - name: Parse results and create summary
+      id: parse_results
+      if: always()
+      run: |
+        python -c "
+        import json
+        import os
+
+        # Read the analysis results
+        try:
+            with open('contradiction_analysis.json', 'r') as f:
+                data = json.load(f)
+
+            # Count issues
+            duplicates = len(data.get('duplicates', []))
+            contradictions = len(data.get('contradictions', []))
+            semantic_contradictions = len(data.get('semantic_contradictions', []))
+            terminology_issues = len(data.get('terminology_issues', {}).get('inconsistencies', []))
+
+            total_issues = duplicates + contradictions + semantic_contradictions + terminology_issues
+
+            # Create GitHub summary
+            summary = []
+            summary.append('# 📊 Documentation Analysis Report\n')
+
+            if total_issues == 0:
+                summary.append('✅ **No issues found!** Your documentation is consistent.\n')
+            else:
+                summary.append(f'⚠️ **Found {total_issues} potential issues:**\n\n')
+
+                if duplicates > 0:
+                    summary.append(f'- 📑 {duplicates} duplicate sections\n')
+                if contradictions > 0:
+                    summary.append(f'- ⚡ {contradictions} potential contradictions\n')
+                if semantic_contradictions > 0:
+                    summary.append(f'- 🔍 {semantic_contradictions} semantic contradictions\n')
+                if terminology_issues > 0:
+                    summary.append(f'- 📝 {terminology_issues} terminology inconsistencies\n')
+
+                summary.append('\n### Recommendations:\n')
+                if terminology_issues > 0:
+                    summary.append('- Run `python scripts/fix_terminology.py` to standardize terms\n')
+                if duplicates > 0:
+                    summary.append('- Review duplicate sections for consolidation\n')
+                if contradictions + semantic_contradictions > 0:
+                    summary.append('- Review contradictions and align documentation\n')
+
+            # Write to GitHub step summary
+            with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+                f.write(''.join(summary))
+
+            # Set outputs for use in PR comments
+            print(f'duplicates={duplicates}')
+            print(f'contradictions={contradictions}')
+            print(f'semantic_contradictions={semantic_contradictions}')
+            print(f'terminology_issues={terminology_issues}')
+            print(f'total_issues={total_issues}')
+
+            # Exit with error if significant issues found
+            if contradictions + semantic_contradictions > 5:
+                exit(1)
+
+        except Exception as e:
+            print(f'Error parsing results: {e}')
+            with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+                f.write('❌ Error analyzing documentation. Check logs for details.\n')
+        " >> $GITHUB_OUTPUT
+
+    - name: Comment on PR
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+
+          // Read analysis results
+          let analysisData;
+          try {
+            const rawData = fs.readFileSync('contradiction_analysis.json', 'utf8');
+            analysisData = JSON.parse(rawData);
+          } catch (error) {
+            console.log('Could not read analysis results');
+            return;
+          }
+
+          // Count issues
+          const duplicates = analysisData.duplicates?.length || 0;
+          const contradictions = analysisData.contradictions?.length || 0;
+          const semanticContradictions = analysisData.semantic_contradictions?.length || 0;
+          const terminologyIssues = analysisData.terminology_issues?.inconsistencies?.length || 0;
+          const total = duplicates + contradictions + semanticContradictions + terminologyIssues;
+
+          // Create comment
+          let comment = '## 🤖 Documentation Analysis Results\n\n';
+
+          if (total === 0) {
+            comment += '✅ **All checks passed!** No documentation issues found.\n';
+          } else {
+            comment += `Found **${total} potential issues** in the documentation:\n\n`;
+
+            if (duplicates > 0) {
+              comment += `### 📑 Duplicates (${duplicates})\n`;
+              analysisData.duplicates.slice(0, 3).forEach(dup => {
+                comment += `- ${(dup.similarity * 100).toFixed(1)}% similarity between \`${dup.file1.split('/').pop()}\` and \`${dup.file2.split('/').pop()}\`\n`;
+              });
+              if (duplicates > 3) comment += `- ... and ${duplicates - 3} more\n`;
+              comment += '\n';
+            }
+
+            if (contradictions + semanticContradictions > 0) {
+              comment += `### ⚡ Contradictions (${contradictions + semanticContradictions})\n`;
+              const allContradictions = [...(analysisData.contradictions || []), ...(analysisData.semantic_contradictions || [])];
+              allContradictions.slice(0, 3).forEach(cont => {
+                const file1 = cont.file1.split('/').pop();
+                const file2 = cont.file2.split('/').pop();
+                comment += `- Potential conflict between \`${file1}\` and \`${file2}\`\n`;
+              });
+              if (allContradictions.length > 3) comment += `- ... and ${allContradictions.length - 3} more\n`;
+              comment += '\n';
+            }
+
+            if (terminologyIssues > 0) {
+              comment += `### 📝 Terminology Inconsistencies (${terminologyIssues})\n`;
+              analysisData.terminology_issues.inconsistencies.slice(0, 3).forEach(issue => {
+                comment += `- Mixed usage of: ${issue.variations_found.map(t => `\`${t}\``).join(', ')}\n`;
+              });
+              if (terminologyIssues > 3) comment += `- ... and ${terminologyIssues - 3} more\n`;
+              comment += '\n';
+            }
+
+            comment += '### 💡 How to fix:\n';
+            comment += '1. Download the artifacts from this workflow run\n';
+            comment += '2. Review `contradiction_analysis.json` for detailed findings\n';
+            if (terminologyIssues > 0) {
+              comment += '3. Run `python scripts/fix_terminology.py` to standardize terminology\n';
+            }
+          }
+
+          // Post comment
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+    - name: Create issue for weekly check
+      if: github.event.schedule && steps.parse_results.outputs.total_issues > 0
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const totalIssues = '${{ steps.parse_results.outputs.total_issues }}';
+          const duplicates = '${{ steps.parse_results.outputs.duplicates }}';
+          const contradictions = '${{ steps.parse_results.outputs.contradictions }}';
+          const terminology = '${{ steps.parse_results.outputs.terminology_issues }}';
+
+          const issueBody = `
+          ## 📊 Weekly Documentation Analysis
+
+          The automated weekly check found **${totalIssues} potential issues** in the documentation:
+
+          - 📑 Duplicates: ${duplicates}
+          - ⚡ Contradictions: ${contradictions}
+          - 📝 Terminology inconsistencies: ${terminology}
+
+          ### Recommended Actions:
+          1. Review the [workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          2. Download the analysis artifacts
+          3. Run \`python scripts/fix_terminology.py\` if needed
+          4. Manually review and fix any contradictions
+
+          This issue was automatically created by the weekly documentation check.
+          `;
+
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `📋 Documentation Issues Found (Week of ${new Date().toISOString().split('T')[0]})`,
+            body: issueBody,
+            labels: ['documentation', 'automated']
+          });

@@ -47,7 +47,7 @@ We need to choose a tech stack for The Vibe Coders community website that balanc
 **Cons:**
 - **Too code heavy** - More complex than needed
 - React overhead for mostly static site
-- App Router adds complexity
+- application Router adds complexity
 - Requires more maintenance
 
 ### Option 3: Vanilla HTML/CSS/JS
@@ -98,7 +98,7 @@ npm install airtable
 - Airtable (all content, forms, and data)
   - Posts table (organizer updates)
   - Applications table (organizer applications)
-  - Organizers table (auth mapping)
+  - Organizers table (authentication mapping)
 
 **Services:**
 - Vercel or Netlify (hosting - both work great with Astro)
@@ -130,7 +130,7 @@ npm install airtable
 ### Mitigations
 - Use React islands where we need rich interactivity
 - Airtable's limits are generous for our use case
-- Astro's docs are excellent and community is growing
+- Astro's documentation are excellent and community is growing
 
 ## Notes
 

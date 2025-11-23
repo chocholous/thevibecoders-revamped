@@ -81,7 +81,7 @@ Build a clean, minimal community website that serves as an events hub and organi
    - Email notification on submission
 
 4. **Organizer Upload**
-   - Protected route (simple auth)
+   - Protected route (simple authentication)
    - Form: City, Text (500 chars), Images (1-5)
    - Direct publish to feed
 
@@ -117,7 +117,7 @@ Build a clean, minimal community website that serves as an events hub and organi
 2. **Content & Forms**: Airtable
    - All data in one place, visual interface, no backend code
 
-3. **Auth Solution**: Auth0
+3. **authentication Solution**: Auth0
    - Google + GitHub login, simple for small user base
 
 4. **Events Integration**: Luma Calendar embeds
@@ -137,7 +137,7 @@ Build a clean, minimal community website that serves as an events hub and organi
 - [ ] Feed displays at least 3 sample posts
 - [ ] Upcoming events pulls from Luma (or displays mocked data)
 - [ ] Organizer form submits and sends notification
-- [ ] Organizer can upload a post (even if auth is basic)
+- [ ] Organizer can upload a post (even if authentication is basic)
 - [ ] Site is responsive and loads quickly
 - [ ] Matches tone/vibe of manifesto site
 
@@ -145,6 +145,6 @@ Build a clean, minimal community website that serves as an events hub and organi
 - **Sprint 1**: Foundation (Design system, project setup, static pages)
 - **Sprint 2**: Feed & Events (Display logic, Luma integration)
 - **Sprint 3**: Organizer Features (Application form, upload flow)
-- **Sprint 4**: Polish & Deploy (Auth, optimization, deployment)
+- **Sprint 4**: Polish & Deploy (authentication, optimization, deployment)
 
 *Note: Each sprint represents focused work sessions, not calendar weeks*

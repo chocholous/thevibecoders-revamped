@@ -6,7 +6,7 @@
 
 ### Base Layout
 ```html
-<body class="vibe-app">
+<body class="vibe-application">
   <header class="site-header">
     <!-- Navigation -->
   </header>
@@ -22,7 +22,7 @@
 ```
 
 ```css
-.vibe-app {
+.vibe-application {
   min-height: 100vh;
   background: var(--color-vibe-purple);
   color: var(--color-text-primary);
@@ -122,7 +122,7 @@
 <section class="hero-split">
   <div class="hero-split__content">
     <h1>We're pioneers</h1>
-    <p>The tools we use don't have docs yet. We figure it out.</p>
+    <p>The tools we use don't have documentation yet. We figure it out.</p>
     <button class="btn-primary">Start Exploring</button>
   </div>
   <div class="hero-split__visual">

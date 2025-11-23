@@ -31,7 +31,7 @@ We're pioneers. We're diverse. We vibe.
 - **Framework**: Astro (static site with islands architecture)
 - **CMS/Database**: Airtable (content, forms, images)
 - **Styling**: Tailwind CSS
-- **Auth**: Auth0 (Google + GitHub for organizers)
+- **authentication**: Auth0 (Google + GitHub for organizers)
 - **Events**: Luma Calendar (embedded widgets)
 - **Hosting**: Vercel or Netlify (TBD)
 
@@ -39,7 +39,7 @@ We're pioneers. We're diverse. We vibe.
 
 ```
 ├── .claude/           # Claude Code configuration
-├── docs/              # Design system and architecture
+├── documentation/              # Design system and architecture
 │   ├── design-system.md
 │   ├── components.md
 │   └── madrs/        # Architecture Decision Records

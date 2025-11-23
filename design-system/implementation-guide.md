@@ -21,7 +21,7 @@ npm install lucide-react
 
 ### 2. Configure Tailwind with Our Tokens
 
-**tailwind.config.js**
+**tailwind.configuration.js**
 ```javascript
 module.exports = {
   content: [

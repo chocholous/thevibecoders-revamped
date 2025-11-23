@@ -1,0 +1,11 @@
+# Requirements for AI-powered contradiction detector
+# Install with: pip install -r scripts/requirements.txt
+
+# Core NLP libraries (lightweight)
+nltk>=3.8
+textstat>=0.7.3
+
+# Optional: For advanced features (uncomment if needed)
+# sentence-transformers>=2.2.0  # For semantic embeddings
+# spacy>=3.5.0  # For entity recognition
+# openai>=1.0.0  # For GPT-based analysis
