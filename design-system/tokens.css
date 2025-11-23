@@ -1,0 +1,212 @@
+/**
+ * The Vibe Coders Design Tokens
+ * "The universe is the limit"
+ *
+ * CSS Custom Properties for consistent design implementation
+ */
+
+:root {
+  /* ===== COLORS ===== */
+
+  /* Brand Colors - Our signature palette */
+  --color-vibe-purple: #4A1D7F;        /* Deep purple background */
+  --color-vibe-purple-dark: #3A1060;   /* Darker variant */
+  --color-vibe-purple-light: #5A2D8F;  /* Lighter variant */
+
+  --color-vibe-teal: #00D4D4;          /* Teal accents & highlights */
+  --color-vibe-teal-dark: #00A8A8;     /* Darker teal for hover */
+  --color-vibe-teal-light: #40E4E4;    /* Lighter teal */
+
+  --color-vibe-orange: #FF6B35;        /* Orange CTAs */
+  --color-vibe-orange-dark: #E55525;   /* Orange hover state */
+  --color-vibe-orange-light: #FF8555;  /* Lighter orange */
+
+  /* Semantic Colors */
+  --color-background: var(--color-vibe-purple);
+  --color-surface: #5A2D8F;            /* Slightly lighter than bg */
+  --color-surface-elevated: #6A3D9F;   /* Cards, modals */
+
+  --color-text-primary: #FFFFFF;       /* Primary text on dark bg */
+  --color-text-secondary: #D4C4E8;     /* Muted text */
+  --color-text-tertiary: #A890C8;      /* Even more muted */
+
+  --color-accent: var(--color-vibe-teal);
+  --color-action: var(--color-vibe-orange);
+  --color-success: #00D97E;
+  --color-warning: #FFB547;
+  --color-error: #FF5757;
+
+  /* Code Editor Colors */
+  --color-code-bg: #1E1E1E;
+  --color-code-comment: #6A9955;
+  --color-code-keyword: #569CD6;
+  --color-code-string: #CE9178;
+
+  /* ===== TYPOGRAPHY ===== */
+
+  /* Font Families */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-heading: var(--font-family-base);
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  /* Font Sizes - Desktop First */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-md: 1.125rem;   /* 18px */
+  --font-size-lg: 1.25rem;    /* 20px */
+  --font-size-xl: 1.5rem;     /* 24px */
+  --font-size-2xl: 1.875rem;  /* 30px */
+  --font-size-3xl: 2.25rem;   /* 36px */
+  --font-size-4xl: 3rem;      /* 48px */
+  --font-size-5xl: 3.75rem;   /* 60px */
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-base: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+
+  /* ===== SPACING ===== */
+
+  /* Spacing Scale - Based on 8px grid */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  --space-32: 8rem;     /* 128px */
+
+  /* Common Spacing Aliases */
+  --space-xs: var(--space-2);
+  --space-sm: var(--space-3);
+  --space-md: var(--space-4);
+  --space-lg: var(--space-6);
+  --space-xl: var(--space-8);
+  --space-2xl: var(--space-12);
+  --space-3xl: var(--space-16);
+
+  /* ===== LAYOUT ===== */
+
+  /* Container Widths */
+  --container-xs: 480px;
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
+  --container-max: 1600px;
+
+  /* Content Width (for readable text) */
+  --content-width: 65ch;
+
+  /* ===== BORDERS & RADIUS ===== */
+
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;  /* 4px */
+  --radius-md: 0.5rem;   /* 8px */
+  --radius-lg: 0.75rem;  /* 12px */
+  --radius-xl: 1rem;     /* 16px */
+  --radius-2xl: 1.5rem;  /* 24px */
+  --radius-full: 9999px; /* Pill shape */
+
+  /* Border Widths */
+  --border-width-thin: 1px;
+  --border-width-base: 2px;
+  --border-width-thick: 4px;
+
+  /* ===== SHADOWS ===== */
+
+  /* Minimal shadows for depth */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  --shadow-glow-teal: 0 0 20px rgba(0, 212, 212, 0.3);
+  --shadow-glow-orange: 0 0 20px rgba(255, 107, 53, 0.3);
+
+  /* ===== TRANSITIONS ===== */
+
+  /* Timing Functions */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Durations */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+
+  /* ===== Z-INDEX ===== */
+
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-popover: 500;
+  --z-tooltip: 600;
+  --z-notification: 700;
+  --z-max: 9999;
+}
+
+/* ===== RESPONSIVE OVERRIDES ===== */
+/* Adjust key values for smaller screens */
+
+@media (max-width: 768px) {
+  :root {
+    /* Smaller font sizes on mobile */
+    --font-size-4xl: 2.25rem;  /* 36px */
+    --font-size-5xl: 2.75rem;  /* 44px */
+
+    /* Tighter spacing on mobile */
+    --space-16: 3rem;   /* 48px */
+    --space-20: 4rem;   /* 64px */
+    --space-24: 5rem;   /* 80px */
+    --space-32: 6rem;   /* 96px */
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Quick access to code editor aesthetic */
+.vibe-code-block {
+  background: var(--color-code-bg);
+  font-family: var(--font-family-mono);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+/* Glow effects for special elements */
+.vibe-glow-teal {
+  box-shadow: var(--shadow-glow-teal);
+}
+
+.vibe-glow-orange {
+  box-shadow: var(--shadow-glow-orange);
+}
