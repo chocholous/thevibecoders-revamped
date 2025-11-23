@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Vibe Coders - Design System Example</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--color-vibe-purple);
+      color: var(--color-text-primary);
+      font-family: var(--font-family-base);
+      line-height: var(--line-height-base);
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: var(--container-xl);
+      margin: 0 auto;
+      padding: 0 var(--space-4);
+    }
+
+    /* Navigation */
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-4) var(--space-8);
+      background: rgba(74, 29, 127, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky);
+    }
+
+    .nav-logo {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: var(--space-6);
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--color-text-primary);
+      text-decoration: none;
+      font-weight: var(--font-weight-medium);
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+
+    .nav-link:hover {
+      color: var(--color-vibe-teal);
+    }
+
+    .nav-link--cta {
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-vibe-orange);
+      border-radius: var(--radius-md);
+      color: white;
+    }
+
+    .nav-link--cta:hover {
+      background: var(--color-vibe-orange-dark);
+      color: white;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: var(--space-32) 0;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: var(--font-size-5xl);
+      font-weight: var(--font-weight-extrabold);
+      margin-bottom: var(--space-6);
+      background: linear-gradient(135deg, white, var(--color-vibe-teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-lead {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto var(--space-8);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: var(--space-3) var(--space-6);
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-base);
+      cursor: pointer;
+      transition: all var(--duration-base) var(--ease-out);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--color-vibe-orange);
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-wide);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-vibe-orange-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow-orange);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-vibe-teal);
+      border: 2px solid var(--color-vibe-teal);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-vibe-teal);
+      color: var(--color-vibe-purple);
+      box-shadow: var(--shadow-glow-teal);
+    }
+
+    /* Manifesto Section */
+    .manifesto {
+      padding: var(--space-20) 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: var(--space-10);
+    }
+
+    .section-header h2 {
+      font-size: var(--font-size-3xl);
+      margin-bottom: var(--space-4);
+    }
+
+    .manifesto-window {
+      max-width: var(--container-md);
+      margin: 0 auto;
+      background: var(--color-code-bg);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+    }
+
+    .window-controls {
+      padding: var(--space-3) var(--space-4);
+      background: #2D2D30;
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot--red { background: #FF5F57; }
+    .dot--yellow { background: #FFBD2E; }
+    .dot--green { background: #28CA42; }
+
+    .manifesto-content {
+      padding: var(--space-6);
+      font-family: var(--font-family-mono);
+      color: var(--color-code-comment);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .manifesto-item {
+      margin-bottom: var(--space-4);
+    }
+
+    .manifesto-number {
+      color: var(--color-code-keyword);
+    }
+
+    /* Events Section */
+    .events-section {
+      padding: var(--space-20) 0;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+
+    .event-card {
+      background: var(--color-surface);
+      padding: var(--space-6);
+      border-radius: var(--radius-lg);
+      border: 2px solid transparent;
+      transition: all var(--duration-base) var(--ease-out);
+    }
+
+    .event-card:hover {
+      border-color: var(--color-vibe-teal);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .event-date {
+      color: var(--color-vibe-teal);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-wide);
+    }
+
+    .event-title {
+      margin: var(--space-3) 0;
+      font-size: var(--font-size-xl);
+    }
+
+    .event-description {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-4);
+    }
+
+    .event-location {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-5);
+    }
+
+    .event-actions {
+      display: flex;
+      gap: var(--space-3);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--color-text-primary);
+      padding: var(--space-3) var(--space-4);
+      border: none;
+      font-weight: var(--font-weight-medium);
+      opacity: 0.8;
+      transition: opacity var(--duration-fast) var(--ease-out);
+    }
+
+    .btn-ghost:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* Cities Section */
+    .cities-section {
+      padding: var(--space-20) 0;
+      background: var(--color-surface);
+    }
+
+    .cities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-8);
+    }
+
+    .city-card {
+      background: var(--color-vibe-purple);
+      padding: var(--space-6);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      transition: all var(--duration-base) var(--ease-out);
+      cursor: pointer;
+    }
+
+    .city-card:hover {
+      transform: translateY(-4px);
+      border: 2px solid var(--color-vibe-teal);
+    }
+
+    .city-flag {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: var(--space-4);
+    }
+
+    /* Footer */
+    .site-footer {
+      margin-top: var(--space-20);
+      padding: var(--space-12) var(--space-8) var(--space-8);
+      background: var(--color-vibe-purple-dark);
+      border-top: 1px solid var(--color-surface);
+      text-align: center;
+    }
+
+    .footer-tagline {
+      color: var(--color-text-secondary);
+      margin-top: var(--space-2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: var(--font-size-4xl);
+      }
+
+      .nav-menu {
+        display: none;
+      }
+
+      .events-grid,
+      .cities-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav-header">
+    <div class="nav-brand">
+      <span class="nav-logo">The Vibe Coders</span>
+    </div>
+    <ul class="nav-menu">
+      <li><a href="#events" class="nav-link">Events</a></li>
+      <li><a href="#manifesto" class="nav-link">Manifesto</a></li>
+      <li><a href="#cities" class="nav-link">Cities</a></li>
+      <li><a href="#join" class="nav-link nav-link--cta">Join Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">The universe is the limit</h1>
+      <p class="hero-lead">
+        Different roles, experiences, backgrounds—and we vibe.
+        A community of AI pioneers exploring what's possible.
+      </p>
+      <div class="hero-actions">
+        <a href="#join" class="btn btn-primary">Join the Vibe</a>
+        <a href="#events" class="btn btn-secondary">Explore Events</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Manifesto Section -->
+  <section class="manifesto" id="manifesto">
+    <div class="container">
+      <header class="section-header">
+        <h2>Our Manifesto</h2>
+      </header>
+      <div class="manifesto-window">
+        <div class="window-controls">
+          <span class="dot dot--red"></span>
+          <span class="dot dot--yellow"></span>
+          <span class="dot dot--green"></span>
+        </div>
+        <div class="manifesto-content">
+          <div class="manifesto-item">
+            <span class="manifesto-number"># 1.</span> The universe is the limit
+          </div>
+          <div class="manifesto-item">
+            <span class="manifesto-number"># 2.</span> We suffer—a lot—but we learn
+          </div>
+          <div class="manifesto-item">
+            <span class="manifesto-number"># 3.</span> We're pioneers
+          </div>
+          <div class="manifesto-item">
+            <span class="manifesto-number"># 4.</span> We're diverse and we vibe
+          </div>
+          <div class="manifesto-item">
+            <span class="manifesto-number"># 5.</span> Last month is sooo history
+          </div>
+          <div class="manifesto-item">
+            <span class="manifesto-number"># 6.</span> We don't sell our souls
+          </div>
+          <div class="manifesto-item">
+            <span class="manifesto-number"># 7.</span> Vibe coding happens IRL
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Events Section -->
+  <section class="events-section" id="events">
+    <div class="container">
+      <header class="section-header">
+        <h2>Upcoming Vibes</h2>
+      </header>
+      <div class="events-grid">
+        <article class="event-card">
+          <span class="event-date">Dec 15 • 6PM PT</span>
+          <h3 class="event-title">AI Tools Showcase 🚀</h3>
+          <p class="event-description">
+            Show off your latest experiments. We suffer—but we learn together!
+          </p>
+          <div class="event-location">📍 Portland, OR</div>
+          <div class="event-actions">
+            <button class="btn btn-primary">RSVP</button>
+            <button class="btn btn-ghost">Learn More</button>
+          </div>
+        </article>
+
+        <article class="event-card">
+          <span class="event-date">Dec 20 • 7PM GMT</span>
+          <h3 class="event-title">London AI Meetup ✨</h3>
+          <p class="event-description">
+            Monthly gathering to explore the latest in AI development.
+          </p>
+          <div class="event-location">📍 London, UK</div>
+          <div class="event-actions">
+            <button class="btn btn-primary">RSVP</button>
+            <button class="btn btn-ghost">Learn More</button>
+          </div>
+        </article>
+
+        <article class="event-card">
+          <span class="event-date">Jan 5 • 5PM EST</span>
+          <h3 class="event-title">New Year, New Tools 🎉</h3>
+          <p class="event-description">
+            Kick off 2025 by sharing what tools you're exploring this year.
+          </p>
+          <div class="event-location">📍 Toronto, CA</div>
+          <div class="event-actions">
+            <button class="btn btn-primary">RSVP</button>
+            <button class="btn btn-ghost">Learn More</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cities Section -->
+  <section class="cities-section" id="cities">
+    <div class="container">
+      <header class="section-header">
+        <h2>Where We Vibe</h2>
+      </header>
+      <div class="cities-grid">
+        <div class="city-card">
+          <span class="city-flag">🇬🇧</span>
+          <h3>London</h3>
+          <p>23 members</p>
+        </div>
+        <div class="city-card">
+          <span class="city-flag">🇺🇸</span>
+          <h3>Portland</h3>
+          <p>18 members</p>
+        </div>
+        <div class="city-card">
+          <span class="city-flag">🇵🇹</span>
+          <h3>Porto</h3>
+          <p>15 members</p>
+        </div>
+        <div class="city-card">
+          <span class="city-flag">🇨🇿</span>
+          <h3>Prague</h3>
+          <p>12 members</p>
+        </div>
+        <div class="city-card">
+          <span class="city-flag">🇸🇪</span>
+          <h3>Stockholm</h3>
+          <p>10 members</p>
+        </div>
+        <div class="city-card">
+          <span class="city-flag">🇨🇦</span>
+          <h3>Toronto</h3>
+          <p>14 members</p>
+        </div>
+        <div class="city-card">
+          <span class="city-flag">🇨🇿</span>
+          <h3>Brno</h3>
+          <p>8 members</p>
+        </div>
+        <div class="city-card">
+          <span class="city-flag">🇨🇿</span>
+          <h3>Pilsen</h3>
+          <p>6 members</p>
+        </div>
+        <div class="city-card">
+          <span class="city-flag">🇺🇸</span>
+          <h3>San Francisco</h3>
+          <p>11 members</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <h3>The Vibe Coders</h3>
+      <p class="footer-tagline">We don't sell our souls.</p>
+    </div>
+  </footer>
+</body>
+</html>
